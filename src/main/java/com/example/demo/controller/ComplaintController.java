@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("/api/complaint")
 public class ComplaintController {
     @GetMapping
-    public String getAllBills() {
-        return "List of all bills";
+    public String getAllcomplaint() {
+        return "List of all complaint";
     }
 
     @PostMapping
-    public String createBill() {
+    public String createcomplaint() {
         return "Bill created successfully";
     }
 }
