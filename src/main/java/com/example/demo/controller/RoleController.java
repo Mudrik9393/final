@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ public class RoleController {
 
     @PostMapping("/create")
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
-        Role savedRole = roleRepository.save(role); // Save role to the database
+        Role savedRole = roleRepository.save(role); 
         return ResponseEntity.ok(savedRole);
     }
 }
