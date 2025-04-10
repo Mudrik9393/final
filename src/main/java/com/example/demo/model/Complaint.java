@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 public class Complaint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long complaintId;
+    private String complaintId;
 
     @Column(nullable = false)
     private String complaintName;
@@ -25,11 +25,11 @@ public class Complaint {
     @Column(nullable = false)
     private String street;
 
-    public Long getComplaintId() {
+    public String getComplaintId() {
         return complaintId;
     }
 
-    public void setComplaintId(Long complaintId) {
+    public void setComplaintId(String complaintId) {
         this.complaintId = complaintId;
     }
 

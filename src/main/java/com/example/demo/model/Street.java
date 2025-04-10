@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 public class Street {
      @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long streetId;
+    private String streetId;
 
     @Column(nullable = false)
     private String streetName;
@@ -21,11 +21,11 @@ public class Street {
     @Column(nullable = false)
     private String district;
 
-    public Long getStreetId() {
+    public String getStreetId() {
         return streetId;
     }
 
-    public void setStreetId(Long streetId) {
+    public void setStreetId(String streetId) {
         this.streetId = streetId;
     }
 

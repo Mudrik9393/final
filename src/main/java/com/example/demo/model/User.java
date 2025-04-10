@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false, unique = true)
     private String userName;
@@ -24,11 +24,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

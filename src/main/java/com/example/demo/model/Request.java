@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long requestId;
+    private String requestId;
 
     @Column(nullable = false)
     private String document;
@@ -20,11 +20,11 @@ public class Request {
     @Column(nullable = false)
     private String requestName;
 
-    public Long getRequestId() {
+    public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(Long requestId) {
+    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 

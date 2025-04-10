@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long billId;
+    private String billId;
 
     @Column(nullable = false)
     private String billName;
