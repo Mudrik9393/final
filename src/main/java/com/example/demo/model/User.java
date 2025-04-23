@@ -24,6 +24,19 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    
+    @Column(nullable = false, unique = true)
+    private String password;
+    
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getUserId() {
         return userId;
     }
