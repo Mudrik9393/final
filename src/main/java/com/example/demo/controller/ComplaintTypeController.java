@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.Repository.ComplaintTypeRepository;
 
 import com.example.demo.model.ComplaintType;
-import com.example.demo.model.Role;
+
 
 @RestController
 @RequestMapping("/api/complaint-types")
@@ -29,8 +29,8 @@ public class ComplaintTypeController {
     private ComplaintTypeRepository complaintTypeRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Role> createRole(@RequestBody ComplaintTypeRepository complaintTypeRepository) {
-        Role savedComplaintTypeRepository = complaintTypeRepository.save(complaintTypeRepository); 
-        return ResponseEntity.ok(savedComplaintTypeRepository);
+    public ResponseEntity<ComplaintType> createComplaintType(@RequestBody ComplaintType complaintType) {
+        ComplaintType savedComplaintType = complaintTypeRepository.save(complaintType); 
+        return ResponseEntity.ok(savedComplaintType);
     }
 }
