@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String billId;
+    private Long billId;
 
     @Column(nullable = false)
     private String billName;
@@ -43,11 +43,11 @@ public class Bill {
         this.totalAmount = this.unitNumber * this.unitprice;
     }
 
-    public String getBillId() {
+    public Long getBillId() {
         return billId;
     }
 
-    public void setBillId(String billId) {
+    public void setBillId(Long billId) {
         this.billId = billId;
     }
 

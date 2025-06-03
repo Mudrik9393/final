@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class BillController {
 
     @PostMapping("/create")
     public ResponseEntity<Bill> createBill(@RequestBody Bill bill) {
-        float fixedUnitPrice = 500f; // fixed price per unit
+        float fixedUnitPrice = 500f; 
         bill.setUnitprice(fixedUnitPrice); 
         
     
@@ -33,4 +34,9 @@ public class BillController {
         return ResponseEntity.ok(savedBill);
     }
     
+     @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteBill(@PathVariable Long id) {
+        billRepository.deleteById(id);
+        return new ResponseEntity<>("Delete data success", HttpStatus.OK);
+    }
 }

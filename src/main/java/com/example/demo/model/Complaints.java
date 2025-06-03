@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,7 +15,7 @@ public class Complaints {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Column(nullable = false)
     private String fullName;
@@ -33,13 +35,18 @@ public class Complaints {
     @Column(nullable = false)
     private String phoneNumber;
 
-    // Getters and Setters
+      @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public String getId() {
+
+    
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

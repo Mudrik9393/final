@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -12,7 +14,7 @@ import jakarta.persistence.Table;
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String requestId;
+    private Long requestId;
 
     @Column(nullable = false)
     private String document;
@@ -20,11 +22,16 @@ public class Request {
     @Column(nullable = false)
     private String requestName;
 
-    public String getRequestId() {
+      @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    public Long getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public void setRequestId(Long requestId) {
         this.requestId = requestId;
     }
 

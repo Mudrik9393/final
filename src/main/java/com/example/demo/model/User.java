@@ -5,15 +5,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String userName;
@@ -24,24 +27,31 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String password;
-    
 
-    public String getPassword() {
-        return password;
-    }
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    public void setPassword(String password) {
+    // Constructors
+    public User() {}
+
+    public User(String userName, String zanId, String email, String password, Role role) {
+        this.userName = userName;
+        this.zanId = zanId;
+        this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public String getUserId() {
+    // Getters and Setters
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -69,5 +79,19 @@ public class User {
         this.email = email;
     }
 
-    
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
