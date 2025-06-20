@@ -1,48 +1,35 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "bills")
 public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billId;
 
-    @Column(nullable = false)
-    private String billName;
+    private String description;
 
-    @Column(nullable = false)
-    private Integer unitNumber;
+    private Double amount;
 
-    @Column(nullable = false)
-    private float unitprice;
-
-    @Column(nullable = false)
-    private float totalAmount;
-
-
-      @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("bills") // Hii inazuia nested cycle kwenye serialization
     private User user;
 
-    // Automatically calculate total
-    @PrePersist
-    @PreUpdate
-    public void calculateTotal() {
-        this.totalAmount = this.unitNumber * this.unitprice;
+    // Constructors
+    public Bill() {}
+
+    public Bill(String description, Double amount, User user) {
+        this.description = description;
+        this.amount = amount;
+        this.user = user;
     }
 
+    // Getters & Setters
     public Long getBillId() {
         return billId;
     }
@@ -51,39 +38,32 @@ public class Bill {
         this.billId = billId;
     }
 
-    public String getBillName() {
-        return billName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBillName(String billName) {
-        this.billName = billName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Integer getUnitNumber() {
-        return unitNumber;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setUnitNumber(Integer unitNumber) {
-        this.unitNumber = unitNumber;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public float getUnitprice() {
-        return unitprice;
+    public User getUser() {
+        return user;
     }
 
-    public void setUnitprice(float unitprice) {
-        this.unitprice = unitprice;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public float getTotalAmount() {
-        return totalAmount;
+    public void setUnitprice(float f) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setUnitprice'");
     }
-
-    public void setTotalAmount(float totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    
-
-
 }

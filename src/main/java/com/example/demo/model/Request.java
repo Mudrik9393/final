@@ -2,14 +2,7 @@ package com.example.demo.model;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "requests")
@@ -26,7 +19,6 @@ public class Request {
     @Column(name = "request_name", nullable = false)
     private String requestName;
 
-    // 👇 Rekebisha hapa kwa sababu column yako ni `localdate`, sio `date`
     @Column(name = "localdate", nullable = false)
     private LocalDate date;
 
@@ -35,11 +27,15 @@ public class Request {
 
     private String message;
 
+    // Assuming you want user relationship, otherwise remove below:
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
 
     // Getters and setters
+
     public Long getRequestId() {
         return requestId;
     }
@@ -88,6 +84,7 @@ public class Request {
         this.message = message;
     }
 
+    
     public User getUser() {
         return user;
     }
@@ -95,4 +92,5 @@ public class Request {
     public void setUser(User user) {
         this.user = user;
     }
+    
 }
