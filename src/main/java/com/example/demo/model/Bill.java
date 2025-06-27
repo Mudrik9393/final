@@ -7,9 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "bills")
 public class Bill {
 
+    private static final double UNIT_PRICE = 2000; // Constant price per unit
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billId;
+
+    @Column(name = "bill_name", nullable = false)
+    private String billName;
 
     private String description;
 
@@ -17,15 +22,20 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties("bills") // Hii inazuia nested cycle kwenye serialization
+    @JsonIgnoreProperties("bills")
     private User user;
+
+    @Column(name = "unit_number", nullable = false)
+    private Integer unit;
+
+    private double totalAmount;
 
     // Constructors
     public Bill() {}
 
-    public Bill(String description, Double amount, User user) {
+    public Bill(String billName, String description, User user) {
+        this.billName = billName;
         this.description = description;
-        this.amount = amount;
         this.user = user;
     }
 
@@ -36,6 +46,14 @@ public class Bill {
 
     public void setBillId(Long billId) {
         this.billId = billId;
+    }
+
+    public String getBillName() {
+        return billName;
+    }
+
+    public void setBillName(String billName) {
+        this.billName = billName;
     }
 
     public String getDescription() {
@@ -62,8 +80,24 @@ public class Bill {
         this.user = user;
     }
 
-    public void setUnitprice(float f) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUnitprice'");
+    public static double getUnitPrice() {
+        return UNIT_PRICE;
+    }
+
+    public Integer getUnit() {
+        return unit != null ? unit : 0;
+    }
+
+    public void setUnit(Integer unit) {
+        this.unit = unit;
+        this.totalAmount = unit != null ? unit * UNIT_PRICE : 0;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

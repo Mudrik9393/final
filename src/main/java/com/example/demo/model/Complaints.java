@@ -1,13 +1,6 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "complaints")
@@ -35,12 +28,15 @@ public class Complaints {
     @Column(nullable = false)
     private String phoneNumber;
 
-      @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // ✅ Added fields
+    private Double latitude;
+    private Double longitude;
 
-    
+    // === Getters and Setters ===
 
     public Long getId() {
         return id;
@@ -96,5 +92,30 @@ public class Complaints {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    // ✅ New Getters and Setters
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

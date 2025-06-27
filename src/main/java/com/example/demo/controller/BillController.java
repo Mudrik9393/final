@@ -8,20 +8,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.Repository.BillRepository;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.model.Bill;
 import com.example.demo.model.User;
-import com.example.demo.Repository.UserRepository;
 
-
+@CrossOrigin 
 @RestController
 @RequestMapping("/api/bills")
 public class BillController {
 
-    private static final double unitprice = 500.0; // Fixed price per unit
-
     @Autowired
-  private UserRepository userRepository;
-
+    private UserRepository userRepository;
 
     @Autowired
     private BillRepository billRepository;
@@ -31,22 +28,35 @@ public class BillController {
         return billRepository.findAll();
     }
 
-    @PostMapping("/create/{userId}")
-public ResponseEntity<Bill> createBill(@PathVariable Long userId, @RequestBody Bill bill) {
-    User user = userRepository.findById(userId).orElse(null);
-    if (user == null) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Bill>> getBillsByUserId(@PathVariable Long userId) {
+        List<Bill> bills = billRepository.findByUserUserId(userId);
+        if (bills.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(bills);
     }
 
-    bill.setUser(user);
-    bill.setUnitprice(500f); // mfano wa bei ya unit
+    @PostMapping("/create/{userId}")
+    public ResponseEntity<Bill> createBill(@PathVariable Long userId, @RequestBody Bill bill) {
+        User user = userRepository.findById(userId).orElse(null);
 
-    Bill savedBill = billRepository.save(bill);
-    return ResponseEntity.ok(savedBill);
-}
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-    
-     @DeleteMapping("/{id}")
+        if (bill.getUnit() == null || bill.getUnit() == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        bill.setUser(user);
+        bill.setUnit(bill.getUnit());
+
+        Bill savedBill = billRepository.save(bill);
+        return ResponseEntity.ok(savedBill);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBill(@PathVariable Long id) {
         billRepository.deleteById(id);
         return new ResponseEntity<>("Delete data success", HttpStatus.OK);

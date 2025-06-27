@@ -22,45 +22,55 @@ public class RequestController {
     private RequestRepository requestRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Request> createRequest(
-            @ModelAttribute Request request,
+    public ResponseEntity<?> createRequest(
+            @RequestParam("requestName") String requestName,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("address") String address,
+            @RequestParam("phoneNumber") String phoneNumber,
+            @RequestParam("date") String dateStr,
+            @RequestParam(value = "message", required = false) String message,
+            @RequestParam(value = "latitude", required = false) Double latitude,
+            @RequestParam(value = "longitude", required = false) Double longitude,
             @RequestParam(value = "document", required = false) MultipartFile documentFile) {
 
-        // Generate account number automatically
-        request.setAccountNumber("ACC" + UUID.randomUUID().toString().substring(0, 8));
+        try {
+            Request request = new Request();
+            request.setRequestName(requestName);
+            request.setFullName(fullName);
+            request.setAddress(address);
+            request.setPhoneNumber(phoneNumber);
+            request.setDate(LocalDate.parse(dateStr));
+            request.setMessage(message);
+            request.setLatitude(latitude);
+            request.setLongitude(longitude);
+            request.setAccountNumber("ACC" + UUID.randomUUID().toString().substring(0, 8));
 
-        // Set date to today if not provided
-        if (request.getDate() == null) {
-            request.setDate(LocalDate.now());
-        }
-
-        // Handle file upload
-        if (documentFile != null && !documentFile.isEmpty()) {
-            try {
-                String uploadDir = "uploads/";
+            // File handling
+            if (documentFile != null && !documentFile.isEmpty()) {
+                String uploadDir = System.getProperty("user.dir") + "/uploads";
                 String fileName = UUID.randomUUID().toString() + "_" + documentFile.getOriginalFilename();
                 java.nio.file.Path uploadPath = java.nio.file.Paths.get(uploadDir);
 
-                // Create directory if not exists
                 if (!java.nio.file.Files.exists(uploadPath)) {
                     java.nio.file.Files.createDirectories(uploadPath);
                 }
 
                 java.nio.file.Path filePath = uploadPath.resolve(fileName);
-
-                // Save the file locally
                 documentFile.transferTo(filePath.toFile());
 
-                // Save the relative path to the database
-                request.setDocument(uploadDir + fileName);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                // Save relative path or absolute path as you prefer
+                request.setDocument(filePath.toString());
+            } else {
+                request.setDocument(null);
             }
-        }
 
-        Request savedRequest = requestRepository.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRequest);
+            Request saved = requestRepository.save(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input: " + e.getMessage());
+        }
     }
 
     @GetMapping("/get")
@@ -74,6 +84,6 @@ public class RequestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
         }
         requestRepository.deleteById(id);
-        return ResponseEntity.ok("Delete data success");
+        return ResponseEntity.ok("Delete success");
     }
 }

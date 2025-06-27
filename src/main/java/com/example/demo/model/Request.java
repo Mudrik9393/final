@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.time.LocalDate;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -13,11 +12,11 @@ public class Request {
     @Column(name = "request_id")
     private Long requestId;
 
-    @Column(nullable = false)
-    private String document;
-
     @Column(name = "request_name", nullable = false)
     private String requestName;
+
+    @Column(nullable = true)
+    private String document;
 
     @Column(name = "localdate", nullable = false)
     private LocalDate date;
@@ -25,14 +24,41 @@ public class Request {
     @Column(name = "account_number", unique = true, nullable = false)
     private String accountNumber;
 
+    @Column(nullable = true)
     private String message;
 
-    // Assuming you want user relationship, otherwise remove below:
+    // New fields
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    private Double latitude;   // ✅ field mpya
+    private Double longitude;
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
 
     // Getters and setters
 
@@ -44,20 +70,20 @@ public class Request {
         this.requestId = requestId;
     }
 
-    public String getDocument() {
-        return document;
-    }
-
-    public void setDocument(String document) {
-        this.document = document;
-    }
-
     public String getRequestName() {
         return requestName;
     }
 
     public void setRequestName(String requestName) {
         this.requestName = requestName;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
     }
 
     public LocalDate getDate() {
@@ -84,7 +110,30 @@ public class Request {
         this.message = message;
     }
 
-    
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public User getUser() {
         return user;
     }
@@ -92,5 +141,4 @@ public class Request {
     public void setUser(User user) {
         this.user = user;
     }
-    
 }
