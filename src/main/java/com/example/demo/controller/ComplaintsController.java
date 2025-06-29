@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,5 +61,44 @@ public class ComplaintsController {
                 return ResponseEntity.ok(savedComplaint);
             })
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // ✅ NEW ENDPOINT: Return only location data (latitude, longitude, and complaint name)
+    @GetMapping("/locations")
+    public List<ComplaintLocationDTO> getComplaintLocations() {
+        List<Complaints> allComplaints = complaintsRepository.findAll();
+
+        return allComplaints.stream()
+                .filter(c -> c.getLatitude() != null && c.getLongitude() != null)
+                .map(c -> new ComplaintLocationDTO(
+                        c.getLatitude(),
+                        c.getLongitude(),
+                        c.getComplaintName()))
+                .collect(Collectors.toList());
+    }
+
+    // DTO Class for location only
+    static class ComplaintLocationDTO {
+        private double latitude;
+        private double longitude;
+        private String complaintName;
+
+        public ComplaintLocationDTO(double latitude, double longitude, String complaintName) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.complaintName = complaintName;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public String getComplaintName() {
+            return complaintName;
+        }
     }
 }
