@@ -58,8 +58,8 @@ public class RequestController {
                 java.nio.file.Path filePath = uploadPath.resolve(fileName);
                 documentFile.transferTo(filePath.toFile());
 
-                // Save relative path or absolute path as you prefer
-                request.setDocument(filePath.toString());
+                // Save only file name, not full path
+                request.setDocument(fileName);
             } else {
                 request.setDocument(null);
             }

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,5 +61,20 @@ public class BillController {
     public ResponseEntity<String> deleteBill(@PathVariable Long id) {
         billRepository.deleteById(id);
         return new ResponseEntity<>("Delete data success", HttpStatus.OK);
+    }
+
+    // NEW: Get all users with role = "customer"
+    @GetMapping("/customers")
+    public ResponseEntity<List<User>> getAllCustomers() {
+        List<User> customers = userRepository.findAll()
+            .stream()
+            .filter(user -> user.getRole() != null && "customer".equalsIgnoreCase(user.getRole().getRoleName()))
+            .collect(Collectors.toList());
+
+        if (customers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(customers);
     }
 }

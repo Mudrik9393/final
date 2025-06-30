@@ -90,7 +90,7 @@ public class Bill {
 
     public void setUnit(Integer unit) {
         this.unit = unit;
-        this.totalAmount = unit != null ? unit * UNIT_PRICE : 0;
+        recalculateAmounts();
     }
 
     public double getTotalAmount() {
@@ -99,5 +99,23 @@ public class Bill {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    // This method recalculates totalAmount and amount from unit * UNIT_PRICE
+    private void recalculateAmounts() {
+        if (this.unit != null) {
+            this.totalAmount = this.unit * UNIT_PRICE;
+            this.amount = this.totalAmount;
+        } else {
+            this.totalAmount = 0;
+            this.amount = 0.0;
+        }
+    }
+
+    // Call recalc before save or update
+    @PrePersist
+    @PreUpdate
+    private void prePersistUpdate() {
+        recalculateAmounts();
     }
 }
