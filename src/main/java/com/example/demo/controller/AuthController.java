@@ -23,29 +23,29 @@ public class AuthController {
     private RoleRepository roleRepository;
 
     @PostMapping("/register")
-public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-        return ResponseEntity.badRequest().body("Email already exists");
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+
+        Optional<Role> roleOptional = roleRepository.findByRoleName(request.getRoleName());
+        if (roleOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Role not found: " + request.getRoleName());
+        }
+
+        Role role = roleOptional.get();
+
+        User user = new User();
+        user.setUserName(request.getUserName());
+        user.setZanId(request.getZanId());
+        user.setEmail(request.getEmail());
+        user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        user.setRole(role);
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Registered successfully");
     }
-
-    Optional<Role> roleOptional = roleRepository.findByRoleName(request.getRoleName());
-    if (roleOptional.isEmpty()) {
-        return ResponseEntity.badRequest().body("Role not found: " + request.getRoleName());
-    }
-    Role role = roleOptional.get();
-
-    User user = new User();
-    user.setUserName(request.getUserName());
-    user.setZanId(request.getZanId());
-    user.setEmail(request.getEmail());
-    user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-    user.setRole(role);
-
-    userRepository.save(user);
-
-    return ResponseEntity.ok("Registered successfully");
-}
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -62,10 +62,15 @@ public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
 
-        return ResponseEntity.ok("Login successful for: " + user.getUserName());
+        // ✅ Jibu la JSON lenye userId na userName
+        return ResponseEntity.ok(new LoginResponse(
+                user.getUserId(),
+                user.getUserName(),
+                "Login successful"
+        ));
     }
 
-    // DTO for login
+    // DTO for login request
     public static class LoginRequest {
         private String email;
         private String password;
@@ -83,7 +88,7 @@ public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         private String zanId;
         private String email;
         private String password;
-        private String roleName; // e.g., "customer"
+        private String roleName;
 
         public String getUserName() { return userName; }
         public void setUserName(String userName) { this.userName = userName; }
@@ -99,5 +104,22 @@ public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
 
         public String getRoleName() { return roleName; }
         public void setRoleName(String roleName) { this.roleName = roleName; }
+    }
+
+    // ✅ DTO for login response
+    public static class LoginResponse {
+        private Long userId;
+        private String userName;
+        private String message;
+
+        public LoginResponse(Long userId, String userName, String message) {
+            this.userId = userId;
+            this.userName = userName;
+            this.message = message;
+        }
+
+        public Long getUserId() { return userId; }
+        public String getUserName() { return userName; }
+        public String getMessage() { return message; }
     }
 }

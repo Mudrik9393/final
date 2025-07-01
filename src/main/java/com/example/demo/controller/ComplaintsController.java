@@ -26,6 +26,7 @@ public class ComplaintsController {
         this.complaintsService = complaintsService;
     }
 
+    // Existing endpoints (UNCHANGED)
     @GetMapping("/get")
     public List<Complaints> getAllComplaints() {
         return complaintsService.getAllComplaints();
@@ -52,8 +53,8 @@ public class ComplaintsController {
                 complaint.setStreet(updatedComplaint.getStreet());
                 complaint.setDistrict(updatedComplaint.getDistrict());
                 complaint.setPhoneNumber(updatedComplaint.getPhoneNumber());
-                
-                // ✅ Added updates for location
+
+                // ✅ Location info
                 complaint.setLatitude(updatedComplaint.getLatitude());
                 complaint.setLongitude(updatedComplaint.getLongitude());
 
@@ -63,22 +64,21 @@ public class ComplaintsController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // ✅ NEW ENDPOINT: Return only location data (latitude, longitude, and complaint name)
+    // ✅ NEW: Return only location data (for the map)
     @GetMapping("/locations")
     public List<ComplaintLocationDTO> getComplaintLocations() {
-        List<Complaints> allComplaints = complaintsRepository.findAll();
-
-        return allComplaints.stream()
-                .filter(c -> c.getLatitude() != null && c.getLongitude() != null)
-                .map(c -> new ComplaintLocationDTO(
-                        c.getLatitude(),
-                        c.getLongitude(),
-                        c.getComplaintName()))
-                .collect(Collectors.toList());
+        return complaintsRepository.findAll().stream()
+            .filter(c -> c.getLatitude() != null && c.getLongitude() != null)
+            .map(c -> new ComplaintLocationDTO(
+                c.getLatitude(),
+                c.getLongitude(),
+                c.getComplaintName()
+            ))
+            .collect(Collectors.toList());
     }
 
-    // DTO Class for location only
-    static class ComplaintLocationDTO {
+    // ✅ DTO for frontend (Map)
+    public static class ComplaintLocationDTO {
         private double latitude;
         private double longitude;
         private String complaintName;
