@@ -66,7 +66,7 @@ public class GenerateController {
 
     // Private method to generate fixed-format control number
     private String generateFormattedNumber() {
-        String prefix = "880120"; // Fixed 6 digits
+        String prefix = "200720"; // Fixed 6 digits
         Random rand = new Random();
         int suffix = rand.nextInt(900) + 100; // Random 3 digits from 100 to 999
         return prefix + suffix;
