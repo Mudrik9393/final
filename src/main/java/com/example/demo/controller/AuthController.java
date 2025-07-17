@@ -22,6 +22,7 @@ public class AuthController {
     @Autowired
     private RoleRepository roleRepository;
 
+    // ✅ REGISTER endpoint
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -47,6 +48,7 @@ public class AuthController {
         return ResponseEntity.ok("Registered successfully");
     }
 
+    // ✅ LOGIN endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
@@ -62,15 +64,16 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
 
-        // ✅ Jibu la JSON lenye userId na userName
+        // ✅ Return userId, userName, roleName
         return ResponseEntity.ok(new LoginResponse(
                 user.getUserId(),
                 user.getUserName(),
+                user.getRole().getRoleName(),
                 "Login successful"
         ));
     }
 
-    // DTO for login request
+    // ✅ DTO: Login Request
     public static class LoginRequest {
         private String email;
         private String password;
@@ -82,7 +85,7 @@ public class AuthController {
         public void setPassword(String password) { this.password = password; }
     }
 
-    // DTO for register
+    // ✅ DTO: Register Request
     public static class RegisterRequest {
         private String userName;
         private String zanId;
@@ -106,20 +109,23 @@ public class AuthController {
         public void setRoleName(String roleName) { this.roleName = roleName; }
     }
 
-    // ✅ DTO for login response
+    // ✅ DTO: Login Response
     public static class LoginResponse {
         private Long userId;
         private String userName;
+        private String roleName;
         private String message;
 
-        public LoginResponse(Long userId, String userName, String message) {
+        public LoginResponse(Long userId, String userName, String roleName, String message) {
             this.userId = userId;
             this.userName = userName;
+            this.roleName = roleName;
             this.message = message;
         }
 
         public Long getUserId() { return userId; }
         public String getUserName() { return userName; }
+        public String getRoleName() { return roleName; }
         public String getMessage() { return message; }
     }
 }

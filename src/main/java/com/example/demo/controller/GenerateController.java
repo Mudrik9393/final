@@ -33,7 +33,7 @@ public class GenerateController {
 
         User user = optionalUser.get();
 
-        // Check if user already has a control number (optional logic)
+        // Check if user already has a control number
         Optional<Generate> existing = generateRepository.findTopByUser(user);
         if (existing.isPresent()) {
             return ResponseEntity.badRequest().body("User already has a control number");
@@ -62,6 +62,24 @@ public class GenerateController {
         List<Generate> controlNumbers = generateRepository.findByUser(user);
 
         return ResponseEntity.ok(controlNumbers);
+    }
+
+    // ✅ Get only the latest or first control number for a specific user
+    @GetMapping("/single/{userId}")
+    public ResponseEntity<?> getSingleControlNumber(@PathVariable Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        User user = optionalUser.get();
+        Optional<Generate> existing = generateRepository.findTopByUser(user);
+
+        if (existing.isPresent()) {
+            return ResponseEntity.ok(existing.get());
+        } else {
+            return ResponseEntity.ok().body("No control number found for this user.");
+        }
     }
 
     // Private method to generate fixed-format control number
