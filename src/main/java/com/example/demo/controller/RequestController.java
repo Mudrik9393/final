@@ -86,4 +86,42 @@ public class RequestController {
         requestRepository.deleteById(id);
         return ResponseEntity.ok("Delete success");
     }
+
+    // ✅ Endpoint mpya ya request locations
+    @GetMapping("/locations")
+    public List<RequestLocationDTO> getRequestLocations() {
+        return requestRepository.findAll().stream()
+            .filter(r -> r.getLatitude() != null && r.getLongitude() != null)
+            .map(r -> new RequestLocationDTO(
+                r.getLatitude(),
+                r.getLongitude(),
+                r.getRequestName()
+            ))
+            .toList();
+    }
+
+    // ✅ DTO class kwa frontend (Map)
+    public static class RequestLocationDTO {
+        private double latitude;
+        private double longitude;
+        private String requestName;
+
+        public RequestLocationDTO(double latitude, double longitude, String requestName) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.requestName = requestName;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public String getRequestName() {
+            return requestName;
+        }
+    }
 }
